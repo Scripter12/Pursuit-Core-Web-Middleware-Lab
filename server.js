@@ -70,14 +70,26 @@ let name
 
 function handleQueue(req, res, next) {
   switch (req.params.action) {
-    case "peek": res.json({
-      status: "success",
-      data: queue[queue.length - 1]
-    })
+    case "peek":
+      if (!queue.length) {
+        res.json({ status: "err: queue is empty" })
+      }
+      else {
+        res.json({
+          status: "success",
+          data: queue[queue.length - 1]
+        })
+      }
       break;
     case "enqueue": queue.unshift(req.query.name)
       break;
-    case "dequeue": name = queue[queue.length - 1]; queue.pop()
+    case "dequeue":
+      if (!queue.length) {
+        res.json({ status: "err: queue is empty" })
+      }
+      else {
+        name = queue[queue.length - 1]; queue.pop()
+      }
       break;
     default: res.json("url is not valid")
   }
